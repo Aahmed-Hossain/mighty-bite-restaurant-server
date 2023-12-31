@@ -20,9 +20,32 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-    await client.connect();
-    await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    // await client.connect();
+
+    const productCollection = client.db("MightyBiteDB").collection("products");
+    const featuredCollection = client.db("MightyBiteDB").collection("featuredProducts");
+
+    app.get('/products', async(req, res)=>{
+        const result = await productCollection.find().toArray();
+        res.send(result)
+    })
+
+    app.get('/featuredProducts', async(req, res)=>{
+        const result = await featuredCollection.find().toArray();
+        res.send(result)
+    })
+
+
+
+
+
+
+
+
+
+
+    // await client.db("admin").command({ ping: 1 });
+    // console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // await client.close();
   }
