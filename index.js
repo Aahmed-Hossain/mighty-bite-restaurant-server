@@ -24,16 +24,27 @@ async function run() {
 
     const productCollection = client.db("MightyBiteDB").collection("products");
     const featuredCollection = client.db("MightyBiteDB").collection("featuredProducts");
+    const userCollection = client.db("MightyBiteDB").collection("users");
 
     app.get('/products', async(req, res)=>{
-        const result = await productCollection.find().toArray();
+        let query = {};
+        if (req.query?.category) {
+          query = { category: req.query.category };
+        }
+        const result = await productCollection.find(query).toArray();
         res.send(result)
     })
 
     app.get('/featuredProducts', async(req, res)=>{
         const result = await featuredCollection.find().toArray();
         res.send(result)
-    })
+    });
+
+    app.post('/users', async(req,res)=>{
+      const user = req.body;
+      const result = await userCollection.insertOne(user);
+      res.send(result)
+    });
 
 
 
